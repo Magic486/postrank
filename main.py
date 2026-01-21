@@ -134,7 +134,8 @@ def main():
         # 企业微信支持绿色字体 <font color="info">Text</font>
         # 橙色/红色字体 <font color="warning">Text</font>
         
-        now_str = datetime.datetime.now().strftime('%m-%d %H:%M')
+        # 强制加 8 小时）：
+        now_str = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).strftime('%m-%d %H:%M')
         
         md_text = f"# 🏆 算法小分队战报\n"
         md_text += f"📅 统计时间：{now_str}\n"
@@ -163,4 +164,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
