@@ -1,0 +1,53 @@
+name: Daily Algorithm Rank
+
+on:
+  schedule:
+    # 每天北京时间 23:00 运行
+    # GitHub 使用 UTC 时间，23:00 - 8小时 = 15:00 UTC
+    - cron: '0 15 * * *'
+  workflow_dispatch: # 允许你手动点击按钮测试
+
+jobs:
+  run-monitor:
+    runs-on: ubuntu-latest
+    
+    # 【关键权限】允许脚本修改仓库文件(为了保存 history.json)
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run script
+      env:
+        # 把刚才配置的密钥注入到环境变量
+        WECOM_WEBHOOK: ${{ secrets.WECOM_WEBHOOK }}
+      run: python main.py
+
+    - name: Commit and Push History
+      # 这一步是把生成的 history.json 保存回仓库
+      run: |
+        git config --global user.name "GitHub Action Bot"
+        git config --global user.email "action@github.com"
+        
+        # 如果 history.json 不存在(第一次运行)，git add 会添加它
+        # 如果已存在，会更新它
+        git add history.json
+        
+        # 检查是否有变化，有变化才提交
+        if git diff --staged --quiet; then
+          echo "No changes to history"
+        else
+          git commit -m "Update daily stats [skip ci]"
+          git push
+        fi
