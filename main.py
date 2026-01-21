@@ -11,7 +11,8 @@ import datetime
 # 从环境变量获取 Webhook (GitHub Actions 里配置)
 # 如果你在本地运行，可以直接把链接填在这里的引号里
 # 优先尝试从环境变量拿（GitHub专用），拿不到就用后面这个默认值（本地专用）
-WEBHOOK_URL = os.environ.get("WECOM_WEBHOOK", "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=b0ae8dc6-1177-4126-b676-9c91d248d4be")FRIEND_LIST = ["bu-huo-m", "xie-luo-feng-sui-9", "vigilant-boydhaq"]
+WEBHOOK_URL = os.environ.get("WECOM_WEBHOOK")
+FRIEND_LIST = ["bu-huo-m", "xie-luo-feng-sui-9", "vigilant-boydhaq"]
 HISTORY_FILE = "history.json"
 
 # ============================================
@@ -162,3 +163,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
